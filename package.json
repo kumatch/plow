@@ -1,0 +1,24 @@
+{
+  "author": "Yosuke Kumakura <kumatch@gmail.com>",
+  "name": "plow",
+  "description": "",
+  "version": "0.0.0",
+  "main": "./lib/plow",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kumatch/plow.git"
+  },
+  "scripts": {
+    "test": "./test/testrunner"
+  },
+  "dependencies": { },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "sinon": "*"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
