@@ -71,6 +71,43 @@ describe('plow each', function() {
         });
 
 
+        describe('workerは値が数値以外ならば例外を発生するならば', function() {
+            var spy = sinon.spy();
+            var error;
+
+            before(function (done) {
+                plow.each(list, function (value, index, next) {
+                    spy(value, index);
+                    if (typeof value === 'number') {
+                        next();
+                    } else {
+                        throw Error(value);
+                    }
+                }, function (err) {
+                    error = err;
+                    done();
+                });
+            });
+
+            it('worker 関数は2回実行される', function () {
+                spy.callCount.should.equal(2);
+            });
+
+            it('worker へ途中までの要素値とindex値が渡される', function () {
+                spy.args.length.should.equal(2);
+
+                for (var i = 0; i < 2; i++) {
+                    spy.args[i][0].should.equal(list[i]);
+                    spy.args[i][1].should.equal(i);
+                }
+            });
+
+            it('最初に発生するエラーオブジェクトのみが得られる', function () {
+                error.message.should.equal(list[1]);
+            });
+        });
+
+
         describe('worker引数を値とnextのみにすると', function() {
             var spy = sinon.spy();
 

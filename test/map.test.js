@@ -82,12 +82,54 @@ describe('plow map', function() {
             });
 
             it('途中までのmap結果が得られる', function () {
-                mapResults.length.should.equal(2);
+                mapResults.length.should.equal(1);
 
                 mapResults[0].should.equal(list[0] * 2);
             });
         });
 
+        describe('workerは値が数値以外に例外を出すならば', function() {
+            var spy = sinon.spy();
+            var mapResults, error;
+
+            before(function (done) {
+                plow.map(list, function (value, index, next) {
+                    spy(value, index);
+                    if (typeof value === 'number') {
+                        next(null, value * 2);
+                    } else {
+                        throw Error(value);
+                    }
+                }, function (err, results) {
+                    error = err;
+                    mapResults = results;
+                    done();
+                });
+            });
+
+            it('worker 関数は2回実行される', function () {
+                spy.callCount.should.equal(2);
+            });
+
+            it('worker へ途中までの要素値とindex値が渡される', function () {
+                spy.args.length.should.equal(2);
+
+                for (var i = 0; i < 2; i++) {
+                    spy.args[i][0].should.equal(list[i]);
+                    spy.args[i][1].should.equal(i);
+                }
+            });
+
+            it('最初に発生するエラーオブジェクトのみが得られる', function () {
+                error.message.should.equal(list[1]);
+            });
+
+            it('途中までのmap結果が得られる', function () {
+                mapResults.length.should.equal(1);
+
+                mapResults[0].should.equal(list[0] * 2);
+            });
+        });
 
         describe('worker引数を値とnextのみにすると', function() {
             var spy = sinon.spy();
@@ -222,14 +264,12 @@ describe('plow map', function() {
                 plow.nextTick.callCount.should.equal(9);
             });
 
-            it('map結果として81要素を持つリストを得る', function () {
-                mapResults.length.should.equal(81);
+            it('map結果として80要素を持つリストを得る', function () {
+                mapResults.length.should.equal(80);
 
                 for (var i = 0; i < 80; i++) {
                     mapResults[i].should.equal(list[i] * 2);
                 }
-
-                (mapResults[81] === undefined).should.ok;
             });
         });
     });
