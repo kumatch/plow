@@ -11,6 +11,8 @@ describe('plow parallel', function() {
             function (next) {
                 var ms = 20;
 
+                spy('foo');
+
                 setTimeout(function () {
                     spy(ms);
                     next(null, ms);
@@ -19,6 +21,8 @@ describe('plow parallel', function() {
             function (next) {
                 var ms = 10;
 
+                spy('bar');
+
                 setTimeout(function () {
                     spy(ms);
                     next(null, ms);
@@ -26,6 +30,8 @@ describe('plow parallel', function() {
             },
             function (next) {
                 var ms = 5;
+
+                spy('baz');
 
                 setTimeout(function () {
                     spy(ms);
@@ -50,20 +56,27 @@ describe('plow parallel', function() {
         });
 
         it('リスト内関数がすべて実行されている', function () {
-            spy.callCount.should.equal(3);
+            spy.callCount.should.equal(6);
         });
 
-        it('最初に5msの関数が実行されている', function () {
-            spy.args[0][0].should.equal(5);
+        it('最初にリスト内関数の開始部分が実行されている', function () {
+            spy.args[0][0].should.equal('foo');
+            spy.args[1][0].should.equal('bar');
+            spy.args[2][0].should.equal('baz');
+        });
+
+        it('１番目に5msの関数が実行されている', function () {
+            spy.args[3][0].should.equal(5);
         });
 
         it('２番目に10msの関数が実行されている', function () {
-            spy.args[1][0].should.equal(10);
+            spy.args[4][0].should.equal(10);
         });
 
         it('３番目に20msの関数が実行されている', function () {
-            spy.args[2][0].should.equal(20);
+            spy.args[5][0].should.equal(20);
         });
+
 
         it('結果は [20, 10, 5]', function () {
             results.length.should.equal(3);
@@ -88,6 +101,8 @@ describe('plow parallel', function() {
             foo: function (next) {
                 var ms = 20;
 
+                spy('foo');
+
                 setTimeout(function () {
                     spy(ms);
                     next(null, ms);
@@ -96,6 +111,8 @@ describe('plow parallel', function() {
             bar: function (next) {
                 var ms = 10;
 
+                spy('bar');
+
                 setTimeout(function () {
                     spy(ms);
                     next(null, ms);
@@ -103,6 +120,8 @@ describe('plow parallel', function() {
             },
             baz: function (next) {
                 var ms = 5;
+
+                spy('baz');
 
                 setTimeout(function () {
                     spy(ms);
@@ -127,19 +146,25 @@ describe('plow parallel', function() {
         });
 
         it('オブジェクト内関数がすべて実行されている', function () {
-            spy.callCount.should.equal(3);
+            spy.callCount.should.equal(6);
         });
 
-        it('最初に5msの関数が実行されている', function () {
-            spy.args[0][0].should.equal(5);
+        it('最初にリスト内関数の開始部分が実行されている', function () {
+            spy.args[0][0].should.equal('foo');
+            spy.args[1][0].should.equal('bar');
+            spy.args[2][0].should.equal('baz');
+        });
+
+        it('１番目に5msの関数が実行されている', function () {
+            spy.args[3][0].should.equal(5);
         });
 
         it('２番目に10msの関数が実行されている', function () {
-            spy.args[1][0].should.equal(10);
+            spy.args[4][0].should.equal(10);
         });
 
         it('３番目に20msの関数が実行されている', function () {
-            spy.args[2][0].should.equal(20);
+            spy.args[5][0].should.equal(20);
         });
 
         it('結果は [foo: 20, bar: 10, baz: 5]', function () {
