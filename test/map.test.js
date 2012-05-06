@@ -159,6 +159,28 @@ describe('plow map', function() {
                 }
             });
         });
+
+        describe('結果受け取り用関数を設定しないならば', function() {
+            var spy = sinon.spy();
+            var count = 0;
+
+            before(function () {
+                plow.map(list, function (value, next) {
+                    spy(value);
+                    count += 1;
+                    //next();
+
+                    if (count >= 4) {
+                        done();
+                    }
+                });
+            });
+
+            it('worker 関数は4回実行される', function () {
+                spy.callCount.should.equal(4);
+                count.should.equal(4);
+            });
+        });
     });
 
 
@@ -270,6 +292,46 @@ describe('plow map', function() {
                 for (var i = 0; i < 80; i++) {
                     mapResults[i].should.equal(list[i] * 2);
                 }
+            });
+        });
+
+        describe('結果受け取り用関数を設定しないならば', function() {
+            var spy = sinon.spy();
+            var count = 0;
+
+            before(function (done) {
+                sinon.spy(plow, 'nextTick');
+
+                plow.map(list, function (value, index, next) {
+                    spy(value, index);
+                    count += 1;
+                    //next();
+
+                    if (count >= 105) {
+                        done();
+                    }
+                });
+            });
+
+            after(function () {
+                plow.nextTick.restore();
+            });
+
+            it('worker関数は計105回実行される', function () {
+                spy.callCount.should.equal(105);
+            });
+
+            it('worker関数は105要素がすべて順番通りに実行されている', function () {
+                spy.args.length.should.equal(105);
+
+                for (var i = 0; i < 105; i++) {
+                    spy.args[i][0].should.equal(i + 1);
+                    spy.args[i][1].should.equal(i);
+                }
+            });
+
+            it('分割処理としてnextTickが11回実行されている', function () {
+                plow.nextTick.callCount.should.equal(11);
             });
         });
     });
