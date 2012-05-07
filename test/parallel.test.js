@@ -306,4 +306,59 @@ describe('plow parallel', function() {
             plow.nextTick.callCount.should.equal(2);
         });
     });
+
+    describe('空リストを与えると', function() {
+        var list = [];
+        var results;
+
+
+        before(function (done) {
+            sinon.spy(plow, 'nextTick');
+
+            plow.parallel(list, function (err, values) {
+                if (err) throw err;
+                results = values;
+                done();
+            });
+        });
+
+        after(function () {
+            plow.nextTick.restore();
+        });
+
+        it('結果は空リスト', function () {
+            results.length.should.equal(0);
+        });
+
+        it('nextTickは0回実行されている', function () {
+            plow.nextTick.callCount.should.equal(0);
+        });
+    });
+
+    describe('空オブジェクトを与えると', function() {
+        var list = {};
+        var results;
+
+        before(function (done) {
+            sinon.spy(plow, 'nextTick');
+
+            plow.parallel(list, function (err, values) {
+                if (err) throw err;
+                results = values;
+                done();
+            });
+        });
+
+        after(function () {
+            plow.nextTick.restore();
+        });
+
+        it('結果は空オブジェクト', function () {
+            Object.keys(results).length.should.equal(0);
+        });
+
+        it('nextTickは0回実行されている', function () {
+            plow.nextTick.callCount.should.equal(0);
+        });
+    });
 });

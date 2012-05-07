@@ -335,4 +335,29 @@ describe('plow map', function() {
             });
         });
     });
+
+    describe('空のリストを与えると', function() {
+        var list = [];
+        var spy = sinon.spy();
+        var mapResults;
+
+        before(function (done) {
+            plow.map(list, function (value, index, next) {
+                spy(value, index);
+                next(null, value);
+            }, function (err, results) {
+                if (err) throw err;
+                mapResults = results;
+                done();
+            });
+        });
+
+        it('worker関数は0回実行される', function () {
+            spy.callCount.should.equal(0);
+        });
+
+        it('map結果は空リスト', function () {
+            mapResults.length.should.equal(0);
+        });
+    });
 });

@@ -2,7 +2,7 @@
   "author": "Yosuke Kumakura <kumatch@gmail.com>",
   "name": "plow",
   "description": "A library for flow control.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "./lib/plow",
   "repository": {
     "type": "git",

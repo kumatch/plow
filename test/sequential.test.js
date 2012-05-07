@@ -207,4 +207,31 @@ describe('plow sequential', function() {
             plow.nextTick.callCount.should.equal(2);
         });
     });
+
+    describe('空リストを与えると', function() {
+        var list = [];
+        var result;
+
+        before(function (done) {
+            sinon.spy(plow, 'nextTick');
+
+            plow.sequential(list, function (err, value) {
+                if (err) throw err;
+                result = value;
+                done();
+            });
+        });
+
+        after(function () {
+            plow.nextTick.restore();
+        });
+
+        it('結果は undefined', function () {
+            (result === undefined).should.ok;
+        });
+
+        it('nextTickが0回実行されている', function () {
+            plow.nextTick.callCount.should.equal(0);
+        });
+    });
 });
