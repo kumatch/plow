@@ -1,8 +1,8 @@
 {
   "author": "Yosuke Kumakura <kumatch@gmail.com>",
   "name": "plow",
-  "description": "",
-  "version": "0.0.0",
+  "description": "A library for flow control.",
+  "version": "0.1.0",
   "main": "./lib/plow",
   "repository": {
     "type": "git",
@@ -15,7 +15,9 @@
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "sinon": "*"
+    "sinon": "*",
+    "grunt": "*",
+    "browserbuild": "*"
   },
   "optionalDependencies": {},
   "engines": {
